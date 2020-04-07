@@ -1,0 +1,43 @@
+{% extends "groups/group_base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block pregroup %}
+<script>var i = 0;</script>
+{% for member in folder.group.memberships.all %}
+  {% if user == member.user and member.permission != "reader" or folder.admin == user and user == member.user or folder.group.type == "private" and user == member.user  %}
+  <script>i++;</script>
+  {% if folder.folders.count == 0 %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:single' slug=folder.group.slug %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+  {% else %}
+    {% for folder in folder.folders.all %}
+      <h1 style="color:#007EE4;"><a href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">
+        <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+    {% endfor %}
+  {% endif %}
+  Update <strong>{{folder.name}}</strong> Data</h1>
+  {% endif %}
+{% endfor %}
+<h1 id="permissionMSG" style="color:red;"></h1>
+<script>
+  var permissionMSG = document.getElementById("permissionMSG");
+  if(i == 0){
+    permissionMSG.innerHTML = "Sorry but you don't have the permission to perform this action!"
+  }
+</script>
+
+{% endblock %}
+
+{% block group_content %}
+{% for member in folder.group.memberships.all %}
+  {% if user == member.user and member.permission != "reader" or folder.admin == user and user == member.user or folder.group.type == "private" and user == member.user  %}
+
+  <form method="POST" id='folderForm'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class ='btn btn-primary btn-lg' value="Update Folder">
+  </form>
+  {% endif %}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+
+{% block pregroup %}
+  {% if user in group.members.all %}
+    {% if group.type == "group" %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:all' %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>{{group.name}}  <img src="{% static 'images/team.png' %}" style="width:50px;height:50px;" ></h1>
+    <a href="{% url 'groups:members' slug=group.slug %}"><h2>Members And Permission</h2></a>
+    {% else %}
+      {% for member in group.members.all %}
+        {% if member != user %}
+          <h1 style="color:#007EE4;"><a href="{% url 'groups:private' %}">
+            <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>@{{member.username}}<img src="{% static 'images/person.png' %}" style="width:50px;height:50px;" ></h1>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% else %}
+    <h1>Sorry you are not a member of this Private Chat!</h1>
+  {% endif %}
+
+{% endblock %}
+
+{% block group_content %}
+  {% if user in group.members.all %}
+  <div class="col-md-12">
+    {% if group.group_files.count == 0 and group.group_folders.count == 0 %}
+      <h2 style="color:red;">No Files And Floders In This Private Chat Yet!</h2>
+
+    {% else %}
+
+      {% for folder in group.group_folders.all %} <!-- Displaying the folders of the group -->
+        {% if folder.folders.count == 0 %}
+            {% include "folders/_folder.html" %}
+        {% endif %}
+      {% endfor %}
+
+      {% for file in group.group_files.all %} <!-- Displaying the files of the group -->
+        {% if file.folder == null %}
+          {% include "files/_file.html" %}
+        {% endif %}
+      {% endfor %}
+
+
+
+    {% endif %}
+  </div>
+
+  {% endif %}
+{% endblock %}
+
+{% block postgroup %}
+<div class="col-md-12">
+{% if user in group.members.all %}
+    {% for member in group.memberships.all %}
+      {% if user == member.user and member.permission != "reader" or group.type == "private" and user == member.user %}
+        <a href="{% url 'groups:create_file' slug=group.slug %}"
+        class = "btn btn-fill btn-primary btn-lg"><img src="{% static 'images/attached.png' %}" alt=""> Upload New File</a>
+        <a href="{% url 'groups:create_folder' slug=group.slug %}"
+        class = "btn btn-fill btn-primary btn-lg"><img src="{% static 'images/add-folder.png' %}" alt=""> Create New Folder</a>
+      {% endif %}
+    {% endfor %}
+    {% if user == group.admin and group.type != "private" %}
+      <a href="{% url 'groups:invite_member' slug=group.slug %}"
+      class = "btn btn-fill btn-primary btn-lg"><img src="{% static 'images/plus.png' %}" alt=""> Invite New Member</a>
+    {% endif %}
+    <a href="{% url 'groups:leave' slug=group.slug %}"
+    class = "btn btn-fill btn-danger btn-lg""><img src="{% static 'images/cross.png' %}" alt=""> Leave</a>
+    <br>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "groups/group_base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+
+{% block pregroup %}
+
+<h1 style="color:#007EE4;">Create A New Folder!</h1>
+{% endblock %}
+{% block group_content %}
+<form method="POST" id = 'folderForm'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" class ='btn btn-primary btn-lg' value="Create">
+  </form>
+{% endblock %}

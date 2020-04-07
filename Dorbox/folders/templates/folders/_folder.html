@@ -1,0 +1,65 @@
+{% load staticfiles %}
+
+<script>
+  function descriptionFunc(){
+    var text = document.getElementById("description");
+    if(text.style.display == "none"){
+      text.style.display = "inline";
+    }else{
+      text.style.display = "none";
+    }
+  }
+</script>
+
+<div class="list-group">
+  <div class="row" style="text-align:center">
+    <div class="list-group-item col-md-2">
+      <a href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">
+        <img src="{% static 'images/directory.png' %}" style="width:80px;height:80px;" ></a>
+    </div>
+    <div class="">
+    </div>
+    <div class="list-group-item col-md-10" style="text-align:left">
+      <div> <!--class="d-flex justify-content-between align-items-center"-->
+      <h3 class='title list-group-item-heading'><a href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">{{folder.name}}</a></h3>
+    <!--  <span><a href="{% url 'groups:invite_member' slug=folder.group.slug %}"
+      class = "btn btn-fill btn-primary btn-md"">Permission</a></span>
+      </div> -->
+
+      <div class="list-group-item-text align-items-center">
+        <strong><span id="{{folder.slug}}" style="display: none;">{{ folder.description }}</span></strong>
+      </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          {{folder.admin.username}} created at {{folder.created_at}}
+          <br>
+          {% if folder.last_changer %}
+            {{folder.last_changer.username}} updated the folder at {{folder.last_update}}
+          {% endif %}
+
+          <div class="">
+            <span>
+              <button type="button" name="button" id="myBtn" onclick="descriptionFunc('{{folder.slug}}')"
+              class="btn btn-fill btn-primary btn-md">Desc</button>
+            </span>
+
+            <span>
+              {% for member in folder.group.memberships.all %}
+                {% if user == member.user and member.permission != "reader" or folder.admin == user and user == member.user or folder.group.type == "private" and user == member.user %}
+                <a href="{% url 'groups:edit_folder' slug=folder.group.slug pk=folder.pk %}"
+                class = "btn btn-fill btn-primary btn-md"">Edit</a>
+
+                {% endif %}
+              {% endfor %}
+
+              {% if folder.admin == user or folder.group.admin == user or folder.group.type == "private" %}
+                <a href="{% url 'groups:delete_folder' slug=folder.group.slug pk=folder.pk %}"
+                class = "btn btn-fill btn-danger btn-md""><img src="{% static 'images/cross.png' %}" style="height:16px;width:16px;" alt=""> Delete</a>
+              {% endif %}
+            </span>
+          </div>
+
+        </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="folders-page">
+  <div class="container">
+    <div class="row">
+      {% if user.is_authenticated %}
+        {% block prefolder %}{% endblock %}
+        {% block folder_content %}{% endblock %}
+        {% block postfolder %}{% endblock %}
+      {% else %}
+        <h1 style="color:red;" >Sorry but you aren't authenticated!</h1>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

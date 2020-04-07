@@ -1,0 +1,60 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+
+{% block pregroup %}
+
+{% if user in folder.group.members.all and folder.admin == user or user in folder.group.members.all and folder.group.admin == user or folder.group.type == "private" and user in folder.group.members.all %}
+
+  {% if folder.folders.count == 0 %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:single' slug=folder.group.slug %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+  {% else %}
+    {% for folder in folder.folders.all %}
+      <h1 style="color:#007EE4;"><a href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">
+        <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+    {% endfor %}
+  {% endif %}
+  Are you sure you want to delete?</h1>
+
+
+  <h2 style="color:red;">VERY IMPORTANT! deleting this folder won't delete it's content it will only delete the folder and move directory and move it's content move it under {{folder.group.name}}!</h2>
+
+{% else %}
+<h1 style="color:red;" >Sorry but you don't have the permission to perform this action!</h1>
+{% endif %}
+{% endblock %}
+
+{% block group_content %}
+{% if user in folder.group.members.all and folder.admin == user or user in folder.group.members.all and folder.group.admin == user or folder.group.type == "private" and user in folder.group.members.all %}
+<div class="list-group-item">
+  <div class="d-flex justify-content-between align-items-center">
+  <h3 class='title list-group-item-heading' style="color:#007EE4;">{{folder.name}}</h3>
+  </div>
+
+  <div class="list-group-item-text align-items-center">
+    <span id="description" style="display: none;">{{ folder.description }}</span>
+  </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      {{folder.admin.username}} created at {{folder.created_at}}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block postgroup %}
+{% if user in folder.group.members.all and folder.admin == user or user in folder.group.members.all and folder.group.admin == user or folder.group.type == "private" and user in folder.group.members.all %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger btn-lg" value="Confirm Delete">
+      {% if folder.folders.count == 0 %}
+        <a class="btn btn-lg btn-primary btn-default" href="{% url 'groups:single' slug=folder.group.slug %}">Cancel</a>
+      {% else %}
+        {% for folder in folder.folders.all %}
+        <a class="btn btn-lg btn-primary btn-default" href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">Cancel</a>
+        {% endfor %}
+    {% endif %}
+
+    </form>
+{% endif %}
+{% endblock %}

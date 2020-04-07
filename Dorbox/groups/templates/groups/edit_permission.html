@@ -1,0 +1,18 @@
+{% extends "groups/group_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block pregroup %}
+  <h3>Change {{object.username}} Group Permission!</h3>
+{% endblock %}
+
+{% block group_content %}
+<form class="" action="index.html" method="POST">
+  <label for="permission">Choose A Permission:</label>
+  <select id="permission">
+    <option value="reader">Reader</option>
+    <option value="editor">Editor</option>
+  </select>
+  <input type="submit"class ='btn btn-primary btn-lg' value="Submit Change">
+</form>
+
+{% endblock %}

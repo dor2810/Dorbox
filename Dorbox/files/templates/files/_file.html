@@ -1,0 +1,69 @@
+{% load staticfiles %}
+<script>
+  function descriptionFunc(name){
+    var text = document.getElementById(name);
+    if(text.style.display == "none"){
+      text.style.display = "inline";
+    }else{
+      text.style.display = "none";
+    }
+  }
+</script>
+
+<div class="row" style="text-align:center;">
+  <div class="list-group-item col-md-2">
+    <a href="{% url 'files:download' path=file.file %}"><img src="{% static 'images/document.png' %}" style="width:80px;height:80px;"></a>
+  </div>
+  <div class="">
+  </div>
+  <div class="list-group-item col-md-10" style="text-align:left;">
+    <div> <!--class="d-flex justify-content-between align-items-center"-->
+    <h3 class='title list-group-item-heading' style="color:#007EE4;">{{file.name}}</h3>
+    <!--
+    <span><a href="{% url 'groups:invite_member' slug=file.group.slug %}"
+    class = "btn btn-fill btn-primary btn-md"">Permission</a></span>-->
+    </div>
+    <div >
+      <span><a href="{% url 'files:download' path=file.file %}">{{ file.file }}</a></span>
+    </div>
+
+    <div class="list-group-item-text align-items-center">
+      <strong><span id="{{file.slug}}" style="display: none;">{{ file.description }}</span></strong>
+    </div>
+
+      <div class="d-flex justify-content-between align-items-center">
+        {{file.admin.username}} uploaded at {{file.uploaded_at}}
+        <br>
+        {% if file.last_changer %}
+          {{file.last_changer.username}} updated the file at {{file.last_update}}
+        {% endif %}
+      <div class="">
+          <span>
+            <button type="button" name="button" id="myBtn" onclick="descriptionFunc('{{file.slug}}')"
+            class="btn btn-fill btn-primary btn-md">Desc</button>
+          </span>
+
+          <span>
+            {% for member in file.group.memberships.all %}
+              {% if user == member.user and member.permission != "reader" or file.admin == user and user == member.user or folder.group.type == "private" and user == member.user %}
+              <a href="{% url 'groups:edit_file' slug=file.group.slug pk=file.pk %}"
+              class = "btn btn-fill btn-primary btn-md"">Edit</a>
+
+              {% endif %}
+            {% endfor %}
+
+            {% if file.admin == user or file.group.admin == user or folder.group.type == "private" %}
+              {% if file.folder %}
+                <a href="{% url 'groups:delete_file' slug=file.group.slug pk=file.pk folder_pk=file.folder.pk %}"
+                class = "btn btn-fill btn-danger btn-md""><img src="{% static 'images/cross.png' %}" style="height:16px;width:16px;" alt=""> Delete</a>
+              {% else %}
+                <a href="{% url 'groups:delete_file' slug=file.group.slug pk=file.pk %}"
+                class = "btn btn-fill btn-danger btn-md""><img src="{% static 'images/cross.png' %}" style="height:16px;width:16px;" alt=""> Delete</a>
+              {% endif %}
+            {% endif %}
+          </span>
+        </div>
+
+      </div>
+  </div>
+</div>

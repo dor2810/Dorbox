@@ -1,0 +1,27 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block group_content %}
+{% if user.is_authenticated %}
+  <h1 style="color:#007EE4;">Invite New Member To the Group!<img src="{% static 'images/person.png' %}" style="width:50px;height:50px;" ></h1>
+<p style="color:white;">------------------------------------------------------------------------------------------------------------------------------</p>
+
+  <form method="POST" id = 'groupForm'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li style="color: red;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <input type="submit"class ='btn btn-primary btn-lg' value="Submit">
+
+  </form>
+{% else %}
+<h1 style="color:red;" >Sorry but you aren't authenticated!</h1>
+{% endif %}
+{% endblock %}

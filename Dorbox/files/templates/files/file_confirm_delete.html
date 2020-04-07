@@ -1,0 +1,67 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+
+{% block condition %}
+{% block pregroup %}
+
+{% if user in file.group.members.all and file.admin == user or user in file.group.members.all and file.group.admin == user or file.group.type == "private" and user in file.group.members.all %}
+  <h1 style="color:#007EE4;" >
+
+    {% if file.folder %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:single_folder' slug=file.group.slug pk=file.folder.pk %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+    {% else %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:single' slug=file.group.slug %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+    {% endif %}
+    Are you sure you want to delete?</h1>
+  {% else %}
+  <h1 style="color:red;" >Sorry but you don't have the permission to perform this action!</h1>
+  {% endif %}
+
+{% endblock %}
+
+
+
+
+
+{% block group_content %}
+  {% if user in file.group.members.all and file.admin == user or user in file.group.members.all and file.group.admin == user or file.group.type == "private" and user in file.group.members.all %}
+    <div class="list-group-item">
+      <div class="d-flex justify-content-between align-items-center">
+      <h3 class='title list-group-item-heading' style="color:#007EE4;">{{file.name}}</h3>
+      </div>
+      <div >
+        <span><a href="{% url 'files:download' path=file.file %}">{{ file.file }}</a></span>
+
+      </div>
+
+      <div class="list-group-item-text align-items -center">
+        <span id="description" style="display: none;">{{ file.description }}</span>
+      </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          {{file.admin.username}} uploaded at {{file.uploaded_at}}
+        </div>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block postgroup %}
+  {% if user in file.group.members.all and file.admin == user or user in file.group.members.all and file.group.admin == user or file.group.type == "private" and user in file.group.members.all %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger btn-lg" value="Confirm Delete">
+      {% if object.folder %}
+      <a href="{% url 'groups:single_folder' slug=object.group.slug pk=object.folder.pk %}"
+      class ="btn btn-lg btn-primary btn-default">Cancel</a>
+      {% else %}
+      <a href="{% url 'groups:single' slug=object.group.slug %}"
+      class ="btn btn-lg btn-primary btn-default">Cancel</a>
+      {% endif %}
+    </form>
+{% endif %}
+
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+
+{% block pregroup %}
+{% if user == object.group.admin %}
+<h2 style="color:#007EE4;"><a href="{% url 'groups:members' slug=object.group.slug %}">
+  <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+  Are you sure you want to remove <strong>{{object.user.username}}</strong> from the group?</h2>
+{% else %}
+  <h1 style="color:red">Sorry, you don't have the permission to remove a group member!</h1>
+{% endif %}
+{% endblock %}
+{% block group_content %}
+{% if user == object.group.admin %}
+    <form method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger btn-lg" value="Confirm Delete">
+      <a href="{% url 'groups:members' slug=object.group.slug %}"
+      class ="btn btn-lg btn-primary btn-default">Cancel</a>
+    </form>
+{% endif %}
+{% endblock %}

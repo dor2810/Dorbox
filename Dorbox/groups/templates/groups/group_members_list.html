@@ -1,0 +1,110 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block pregroup %}
+  {% if user in group.members.all and group.type != "private" %}
+  <h1 style="color:#007EE4;"><a href="{% url 'groups:single' slug=group.slug %}">
+    <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>{{group.name}} Members And Permissions!</h1>
+  <!--<h2>{{group.members.count}} member{{group.members.count|pluralize}}</h2>-->
+
+  {% elif user not in group.members.all %}
+    <h1 style="color:red;">Sorry you are not a member of this group</h1>
+  {% elif group.type == "private" %}
+    <h1 style="color:red;">Not a public group </h1>
+  {% endif %}
+{% endblock %}
+
+{% block group_content %}
+  {% if user in group.members.all and group.type != "private" %}
+    <div class="row">
+      <div class="col-md-8">
+        <div class="list-group-item">
+          <h2 class='title list-group-item-heading' style="color:#007EE4;">Members</h2>
+        </div>
+        {% for member in group.memberships.all %}
+        {% if member.permission != "reader" %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                  <div class="">
+                    {% if member.permission == "editor" %}
+                    <img src="{% static 'images/editor.png' %}" >
+                    {% elif member.permission == "admin" %}
+                    <img src="{% static 'images/admin.png' %}" >
+                    {% endif %}
+                    {{member.user.username}}
+                  </div>
+                  <div class="">
+                    <span>
+                      <a style="color: #007EE4;">{{member.permission}}</a>
+                    </span>
+                    {% if member.user != user %}
+                      <a href="{% url 'groups:create-private-username' user_id=member.user.id %}" class="btn btn-sm btn-primary">Private Chat</a>
+                    {% endif %}
+                    {% if user == group.admin and user != member.user %}
+                    <a href="{% url 'groups:delete_member' slug=member.group.slug pk=member.pk %}"
+                    class = "btn btn-fill btn-danger btn-sm""><img src="{% static 'images/cross.png' %}" style="height:16px;width:16px;" alt=""> Remove</a>
+                    {% endif %}
+                  </div>
+              </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+
+        {% for member in group.memberships.all %}
+        {% if member.permission == "reader" %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+                  <div class="">
+                    <img src="{% static 'images/reader.png' %}" >
+                    {{member.user.username}}
+                  </div>
+                  <div class="">
+                    <span>
+                      <a style="color: #007EE4;">{{member.permission}}</a>
+                    </span>
+                    {% if member.user != user %}
+                      <a href="{% url 'groups:create-private-username' user_id=member.user.id %}" class="btn btn-sm btn-primary">Private Chat</a>
+                    {% endif %}
+                    {% if user == group.admin and user != member.user %}
+                    <a href="{% url 'groups:delete_member' slug=member.group.slug pk=member.pk %}"
+                    class = "btn btn-fill btn-danger btn-sm""><img src="{% static 'images/cross.png' %}" style="height:16px;width:16px;" alt=""> Remove</a>
+                    {% endif %}
+                  </div>
+              </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+      {% if user == group.admin %}
+      <div class="col-md-4">
+        <div class="list-group-item">
+          <h2 class='title list-group-item-heading' style="color:#007EE4;">Change Permission</h2>
+        </div>
+
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <form action="{% url 'groups:members' slug=group.slug %}" method="POST" id = 'groupForm'>
+              {% csrf_token %}
+              {{ form|crispy }}
+              {% if messages %}
+                <ul class="messages">
+                  {% for message in messages %}
+                    {% if message.tags == "warning" %}
+                    <li style="color: red;">{{ message }}</li>
+                    {% else %}
+                    <li style="color: green;">{{ message }}</li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              <input type="submit"class ='btn btn-primary btn-lg' value="Submit">
+            </form>
+            </div>
+        </div>
+      </div>
+      {% endif %}
+
+{% endif %}
+{% endblock %}

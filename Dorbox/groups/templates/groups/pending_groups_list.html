@@ -1,0 +1,41 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+{% block pregroup %}
+{% if user.is_authenticated %}
+  <h1 style="color:#007EE4;"><a href="{% url 'groups:all' %}">
+  <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>Pending Groups! <img src="{% static 'images/team.png' %}" style="width:50px;height:50px;" ></h1>
+{% else %}
+  <h2 style="color:red;">Sorry There Are No Pending Groups</h2>
+{% endif %}
+{% endblock %}
+
+{% block group_content %}
+{% if user.is_authenticated %}
+{% if user.group_pending.count != 0 %}
+<div class="col-md-12">
+  <div class="list-group">
+      {% for group in object_list %}
+          {% if user in group.pending_members.all and user not in group.members.all %}
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class='title list-group-item-heading'>{{group.name}}</h3>
+              <span class="badge badge-primary">{{group.members.count}} member{{group.members.count|pluralize}}</span>
+            </div>
+            <div class="list-group-item-text">
+              {{group.admin.username}} is the admin
+            </div>
+
+
+              <div class="d-flex justify-content-between align-items-center">
+                {{group.description}}
+                <span><a href="{% url 'groups:join' slug=group.slug %}" class="btn btn-primary btn-lg">Join</a></span>
+              </div>
+          </div>
+          {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}

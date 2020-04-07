@@ -1,0 +1,65 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+
+{% block pregroup %}
+{% if user.is_authenticated %}
+  <div class="col-md-12">
+    <div class="content">
+      {% if user.is_authenticated %}
+        <h1 style="color:#007EE4;">Hi @{{user.username}}</h1>
+
+      <h2 style="color:#007EE4;">These Are Your Private Chats!</h2>
+
+
+    {% endif %}
+    </div>
+  </div>
+{% else %}
+<h1 style="color:red;" >Sorry but you aren't authenticated!</h1>
+{% endif %}
+{% endblock %}
+
+
+{% block group_content %}
+
+{% if user.is_authenticated %}
+
+  {% for group in object_list %}
+    {% if user in group.members.all %}
+    {% if group.type == "private" %}
+    <div class="list-group">
+      <div class="row" style="text-align:center">
+        <div class="list-group-item col-md-2">
+          <a href="{% url 'groups:single' slug=group.slug %}">
+            <img src="{% static 'images/person.png' %}" style="width:80px;height:80px;" ></a>
+        </div>
+        <div class="">
+        </div>
+        <div class="list-group-item col-md-10" style="text-align:left">
+          <a class="" href="{% url 'groups:single' slug=group.slug %}">
+
+
+              {% for member in group.members.all %}
+                {% if member != user %}
+                  <h3 class='list-group-item-heading title' style="color:#007EE4;">@{{member.username}}</h3>
+                {% endif %}
+              {% endfor %}
+              <div class="list-group-item-text">
+                {{group.description}}
+              </div>
+            </a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% endblock %}
+
+
+{% block postgroup %}
+  <a href="{% url 'groups:create-private' %}" class ='btn btn-lg btn-fill btn-primary'>
+    <img src="{% static 'images/plus.png' %}" alt=""> Create New Private Chat!
+  </a>
+{% endblock %}

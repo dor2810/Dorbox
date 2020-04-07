@@ -1,0 +1,33 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+{% block pregroup %}
+  <div class="col-md-12">
+    <div class="content">
+      {% if user.is_authenticated %}
+        <h1 style="color:#007EE4; font-size:83px; text-align:center;">Welcome!</h1>
+        <h1 style="color:#007EE4; font-size:83px; text-align:center;">@{{user.username}}</h1>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block group_content %}
+
+
+<div class="list-group" >
+  <div class="row" style="text-align:center">
+    <div class="list-group-item col-md-6">
+      <a href="{% url 'groups:all' %}">
+        <h2 style=font-size:60px;>Groups!</h2><img src="{% static 'images/team.png' %}" style="width:100px;height:100px;" >
+      </a>    </div>
+    <div class="">
+    </div>
+    <div class="list-group-item col-md-6">
+      <a href="{% url 'groups:private' %}">
+        <h2 style=font-size:60px;>Private Chats!</h2><img src="{% static 'images/person.png' %}" style="width:100px;height:100px;" >
+      </a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

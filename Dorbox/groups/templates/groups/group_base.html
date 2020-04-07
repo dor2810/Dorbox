@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+  <div class="">
+    {% if user.is_authenticated %}
+      <p style="color:white;">------------------------------------------------------------------------------------------------------------------------------------------</p>
+      {% block pregroup %}{% endblock %}
+      <p style="color:white;">------------------------------------------------------------------------------------------------------------------------------------------</p>
+      {% block group_content %}{% endblock %}
+      <p style="color:white;">------------------------------------------------------------------------------------------------------------------------------------------</p>
+      {% block postgroup %}{% endblock %}
+    {% else %}
+      <h1 style="color:red;" >Sorry but you aren't authenticated!</h1>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

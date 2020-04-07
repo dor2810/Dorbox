@@ -1,0 +1,24 @@
+{% extends "groups/group_base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block pregroup %}
+  <h1 style="color:#007EE4;"><a href="{% url 'groups:private' %}">
+    <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>Create A New Private Chat! <img src="{% static 'images/person.png' %}" style="width:50px;height:50px;" ></h1>
+{% endblock %}
+
+{% block group_content %}
+  <form action="{% url 'groups:create-private' %}" method="POST" id = 'groupForm'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    {% for message in messages %}
+      {% if message.tags == "warning" %}
+      <li style="color: red;">{{ message }}</li>
+      {% else %}
+      <li style="color: green;">{{ message }}</li>
+      {% endif %}
+    {% endfor %}
+    <input type="submit"class ='btn btn-primary btn-lg' value="Create Private">
+  </form>
+
+{% endblock %}

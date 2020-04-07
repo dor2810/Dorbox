@@ -1,0 +1,73 @@
+{% extends "groups/group_base.html" %}
+{% load staticfiles %}
+{% block pregroup %}
+  {% if user in folder.group.members.all %}
+
+  {% if folder.folders.count == 0 %}
+    <h1 style="color:#007EE4;"><a href="{% url 'groups:single' slug=folder.group.slug %}">
+      <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+  {% else %}
+    {% for folder in folder.folders.all %}
+      <h1 style="color:#007EE4;"><a href="{% url 'groups:single_folder' slug=folder.group.slug pk=folder.pk %}">
+        <img src="{% static 'images/go-back-arrow.png' %}" style="width:60px;height:60px;"></a>
+
+    {% endfor %}
+  {% endif %}
+  {{folder.name}} <img src="{% static 'images/directory.png' %}" style="width:50px;height:50px;" >
+  </h1>
+<!--  <h1><a href="{% url 'groups:download_folder' slug=folder.group.slug pk=folder.pk %}">Download Folder Files</a></h1> -->
+
+<!--  {% if folder.group.type != "private" %}
+  <a href="{% url 'groups:members' slug=folder.group.slug %}"><h2>Member And Permission</h2></a>
+  {% endif %} -->
+
+
+  {% else %}
+    <h1>Sorry you are not a member of this group</h1>
+  {% endif %}
+
+{% endblock %}
+
+{% block group_content %}
+  {% if user in folder.group.members.all %}
+  <div class="col-md-12">
+    <script type="text/javascript">
+      var i = 0;
+    </script>
+    {% for folder in folder.my_folders.all %} <!-- Displaying the files of the folder -->
+        {% include "folders/_folder.html" %}
+        <script type="text/javascript">i++;</script>
+    {% endfor %}
+
+      {% for file in folder.folder_files.all %} <!-- Displaying the files of the folder -->
+        {% include "files/_file.html" %}
+        <script type="text/javascript">i++;</script>
+      {% endfor %}
+
+    <h1 id="msg" style="display:none; color:red;">Sorry There Are No Folders And Files Yet!</h1>
+
+    <script type="text/javascript">
+      if(i == 0){
+        var msg = document.getElementById("msg");
+        msg.style.display = "inline";
+      }
+    </script>
+
+  </div>
+
+  {% endif %}
+{% endblock %}
+
+{% block postgroup %}
+  {% for member in folder.group.memberships.all %}
+    {% if user == member.user and member.permission != "reader" or member.user == user and folder.group.type == "private" %}
+    <div class="col-md-12">
+      <a href="{% url 'groups:create_file' slug=folder.group.slug pk=folder.pk %}"
+      class = "btn btn-fill btn-primary btn-lg"><img src="{% static 'images/attached.png' %}" alt="">Upload New File</a>
+      <a href="{% url 'groups:create_folder' slug=folder.group.slug pk=folder.pk %}"
+      class = "btn btn-fill btn-primary btn-lg"><img src="{% static 'images/add-folder.png' %}" alt="">Create New Folder</a>
+    </div>
+    {% endif %}
+  {% endfor %}
+
+{% endblock %}

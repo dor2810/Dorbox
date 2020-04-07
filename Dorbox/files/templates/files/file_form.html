@@ -1,0 +1,14 @@
+{% extends "groups/group_base.html" %}
+{% load crispy_forms_tags %}
+
+{% block pregroup %}
+  <h1 style="color:#007EE4;">Upload A New File!</h1>
+{% endblock %}
+{% block group_content %}
+  <form method="POST" id = 'fileForm' enctype="multipart/form-data">
+    {% csrf_token %}
+   {{ form|crispy }}
+    <input type="submit" class ='btn btn-primary btn-lg' value="Upload">
+  </form>
+
+{% endblock %}
