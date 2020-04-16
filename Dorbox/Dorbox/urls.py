@@ -28,7 +28,7 @@ urlpatterns = [
 
 urlpatterns = [
     url(r"^$", views.LandingPage.as_view(), name="home"),
-    url(r"^home/$", views.UserHome.as_view(), name="user_home"),    
+    url(r"^home/$", views.UserHome.as_view(), name="user_home"),
     url(r"^thanks/$", views.ThanksPage.as_view(), name="thanks"),
     url(r"^admin/", admin.site.urls),
     url(r"^accounts/", include("accounts.urls", namespace="accounts")),
@@ -36,4 +36,5 @@ urlpatterns = [
     url(r"^files/", include("files.urls", namespace="files")),
     url(r"^groups/",include("groups.urls", namespace="groups")),
     url(r"^folders/", include("folders.urls", namespace="folders")),
+    url(r"^help/$", views.HelpPage.as_view(), name="help"),
 ]

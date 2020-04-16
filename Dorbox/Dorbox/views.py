@@ -8,3 +8,6 @@ class LandingPage(TemplateView):
 
 class UserHome(TemplateView):
     template_name = 'user_home.html'
+
+class HelpPage(TemplateView):
+    template_name = 'help.html'
