@@ -2,6 +2,75 @@
 {% load staticfiles %}
 
 {% block pregroup %}
-<h1>Help</h1>
+<h1 style="color: #007EE4;">How Does Dorbox Work?</h1>
+<br>
+<h6>Dorbox is divided into two parts</h6>
+<h6>
+  <ul>
+    <li><a href="#groups">Groups</a></li>
+    <li><a href="#private-chats">Private Chats</a></li>
+  </ul>
+</h6>
 
+<h2 style="color: #007EE4;" id="groups">Groups</h2>
+
+<h4 style="color: #007EE4;">Creating Groups</h4>
+<h6>You can create a group by pressing the Create Group button.</h6>
+<h6>Inside these group, members with permission will be able to upload files and create folders.</h6>
+<h6>When you create a group you are set to be the Group Admin.</h6>
+<br>
+<h6>Each group has 3 levels of permissions</h6>
+<h6>
+  <ul>
+
+    <li><a href="#reader">Reader</a></li>
+    <li><a href="#editor">Editor</a></li>
+    <li><a href="#admin">Admin</a></li>
+  </ul>
+</h6>
+
+<br>
+
+<h4 style="color: #007EE4;" id="reader">Reader</h4>
+<h6>Reader is the most basic permission</h6>
+<h6>A reader can only read the descriptions of files and folders and download files</h6>
+<h6>You can leave a group whenever you want</h6>
+<br>
+
+<h4 style="color: #007EE4;" id="editor">Editor</h4>
+<h6>Editor is above Reader and can do anything reader does and more.</h6>
+<h6>Editor additional options:</h6>
+<h6>
+<ul>
+  <li>Can Create new folders and upload new files</li>
+  <li>Can edit all the files and the folders</li>
+  <li>Can only delete files that he uploaded or folders that he created</li>
+</ul>
+</h6>
+<br>
+
+
+<h4 style="color: #007EE4;" id="admin">Admin</h4>
+<h6>Admin is above Reader and Editor and can do anything reader and editor do and more.</h6>
+<h6>Admin additional options:</h6>
+<h6>
+<ul>
+  <li>The only member who can invite new members or remove members from the group</li>
+  <li>The only member who can change others permission in the group</li>
+  <li>Can edit and delete each file and folder within the group</li>
+</ul>
+</h6>
+<br>
+
+<h4 style="color: #007EE4;" id="admin">Pending Groups</h4>
+<h6>When an admin invites you to a group the invitation will wait for you inside Pending Groups</h6>
+<h6>Admin additional options:</h6>
+
+<br>
+
+
+<h2 style="color: #007EE4;" id="private-chats">Private Chats</h2>
+<h6>Private Chats are the place to share files between only two people</h6>
+<h6>You can create a new Private Chat by creating with a username or by clicking on Private Chat button inside the Members And Permissions Page</h6>
+<h6>Inside of a private chat each member has all the options from uploading new file to deleting it.</h6>
 {% endblock %}
